@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GymCoach — Alumnos</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="alumnos.html">GymCoach</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item" data-rol="coach"><a class="nav-link" href="alumnos.html">Alumnos</a></li>
+          <li class="nav-item" data-rol="coach"><a class="nav-link" href="grupos.html">Grupos Musculares</a></li>
+          <li class="nav-item" data-rol="coach"><a class="nav-link" href="ejercicios.html">Ejercicios</a></li>
+          <li class="nav-item" data-rol="coach"><a class="nav-link" href="rutinas.html">Rutinas</a></li>
+          <li class="nav-item" data-rol="coach"><a class="nav-link" href="asignaciones.html">Asignaciones</a></li>
+          <li class="nav-item" data-rol="coach"><a class="nav-link" href="reportes.html">Reportes</a></li>
+          <li class="nav-item" data-rol="alumno"><a class="nav-link" href="mi-rutina.html">Mi Rutina</a></li>
+        </ul>
+        <span class="navbar-text text-light me-3" id="nombreUsuario"></span>
+        <button class="btn btn-outline-light btn-sm" id="btnLogout" type="button">Salir</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h1 class="h3 mb-4">Alumnos</h1>
+
+    <div class="card mb-4">
+      <div class="card-body">
+        <h2 class="h5 card-title" id="formTitulo">Nuevo alumno</h2>
+        <form id="formAlumno">
+          <input type="hidden" id="idAlumno">
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label for="nombre" class="form-label">Nombre</label>
+              <input type="text" class="form-control" id="nombre" required>
+            </div>
+            <div class="col-md-4">
+              <label for="email" class="form-label">Email</label>
+              <input type="email" class="form-control" id="email" required>
+            </div>
+            <div class="col-md-4">
+              <label for="telefono" class="form-label">Teléfono</label>
+              <input type="text" class="form-control" id="telefono">
+            </div>
+            <div class="col-md-4">
+              <label for="password" class="form-label">Contraseña</label>
+              <input type="password" class="form-control" id="password">
+              <div class="form-text">Obligatoria al crear. Vacía al editar = no cambia.</div>
+            </div>
+          </div>
+          <div id="errorAlumno" class="alert alert-danger mt-3 d-none"></div>
+          <div class="mt-3">
+            <button type="submit" class="btn btn-primary">Guardar</button>
+            <button type="button" class="btn btn-secondary d-none" id="btnCancelar">Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <table class="table table-striped bg-white">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Nombre</th>
+          <th>Email</th>
+          <th>Teléfono</th>
+          <th class="table-actions">Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="tablaAlumnos"></tbody>
+    </table>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/navbar.js"></script>
+  <script src="js/alumnos.js"></script>
+</body>
+</html>

@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GymCoach — Rutinas</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="alumnos.html">GymCoach</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item" data-rol="coach"><a class="nav-link" href="alumnos.html">Alumnos</a></li>
+          <li class="nav-item" data-rol="coach"><a class="nav-link" href="grupos.html">Grupos Musculares</a></li>
+          <li class="nav-item" data-rol="coach"><a class="nav-link" href="ejercicios.html">Ejercicios</a></li>
+          <li class="nav-item" data-rol="coach"><a class="nav-link" href="rutinas.html">Rutinas</a></li>
+          <li class="nav-item" data-rol="coach"><a class="nav-link" href="asignaciones.html">Asignaciones</a></li>
+          <li class="nav-item" data-rol="coach"><a class="nav-link" href="reportes.html">Reportes</a></li>
+          <li class="nav-item" data-rol="alumno"><a class="nav-link" href="mi-rutina.html">Mi Rutina</a></li>
+        </ul>
+        <span class="navbar-text text-light me-3" id="nombreUsuario"></span>
+        <button class="btn btn-outline-light btn-sm" id="btnLogout" type="button">Salir</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h1 class="h3 mb-4">Rutinas</h1>
+
+    <div class="card mb-4">
+      <div class="card-body">
+        <h2 class="h5 card-title" id="formTitulo">Nueva rutina</h2>
+        <form id="formRutina">
+          <input type="hidden" id="idRutina">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label for="nombre" class="form-label">Nombre</label>
+              <input type="text" class="form-control" id="nombre" required>
+            </div>
+            <div class="col-md-6">
+              <label for="descripcion" class="form-label">Descripción</label>
+              <input type="text" class="form-control" id="descripcion">
+            </div>
+          </div>
+
+          <hr>
+          <h3 class="h6">Ejercicios de la rutina</h3>
+          <div class="row g-2 align-items-end">
+            <div class="col-md-4">
+              <label for="selectEjercicio" class="form-label">Ejercicio</label>
+              <select class="form-select" id="selectEjercicio"></select>
+            </div>
+            <div class="col-md-2">
+              <label for="series" class="form-label">Series</label>
+              <input type="number" class="form-control" id="series" min="1" value="3">
+            </div>
+            <div class="col-md-2">
+              <label for="repeticiones" class="form-label">Repeticiones</label>
+              <input type="number" class="form-control" id="repeticiones" min="1" value="10">
+            </div>
+            <div class="col-md-2">
+              <label for="descanso" class="form-label">Descanso (seg)</label>
+              <input type="number" class="form-control" id="descanso" min="0" value="60">
+            </div>
+            <div class="col-md-2">
+              <button type="button" class="btn btn-outline-primary w-100" id="btnAgregarEjercicio">Agregar</button>
+            </div>
+          </div>
+
+          <table class="table table-sm mt-3">
+            <thead>
+              <tr>
+                <th>Ejercicio</th>
+                <th>Series</th>
+                <th>Repeticiones</th>
+                <th>Descanso</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="listaEjerciciosRutina"></tbody>
+          </table>
+
+          <div id="errorRutina" class="alert alert-danger mt-3 d-none"></div>
+          <div class="mt-3">
+            <button type="submit" class="btn btn-primary">Guardar</button>
+            <button type="button" class="btn btn-secondary d-none" id="btnCancelar">Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <table class="table table-striped bg-white">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Nombre</th>
+          <th>Descripción</th>
+          <th class="table-actions">Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="tablaRutinas"></tbody>
+    </table>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/navbar.js"></script>
+  <script src="js/rutinas.js"></script>
+</body>
+</html>

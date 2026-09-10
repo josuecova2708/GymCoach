@@ -1,0 +1,16 @@
+body {
+  background-color: #f8f9fa;
+}
+
+.navbar-brand {
+  font-weight: 600;
+}
+
+.table-actions {
+  white-space: nowrap;
+}
+
+.card-login {
+  width: 100%;
+  max-width: 400px;
+}

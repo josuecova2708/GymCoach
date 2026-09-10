@@ -1,0 +1,106 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: gymcoach-postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      USUARIOS_DB_PASSWORD: ${USUARIOS_DB_PASSWORD}
+      EJERCICIOS_DB_PASSWORD: ${EJERCICIOS_DB_PASSWORD}
+      ENTRENAMIENTO_DB_PASSWORD: ${ENTRENAMIENTO_DB_PASSWORD}
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./sql:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  gateway:
+    build: ./gateway
+    container_name: gymcoach-gateway
+    environment:
+      PORT: ${GATEWAY_PORT}
+      JWT_SECRET: ${JWT_SECRET}
+      USUARIOS_URL: ${USUARIOS_URL}
+      EJERCICIOS_URL: ${EJERCICIOS_URL}
+      MEDIA_URL: ${MEDIA_URL}
+      ENTRENAMIENTO_URL: ${ENTRENAMIENTO_URL}
+    ports:
+      - "${GATEWAY_PORT}:${GATEWAY_PORT}"
+    depends_on:
+      - ms-usuarios
+      - ms-ejercicios
+      - ms-media
+      - ms-entrenamiento
+
+  ms-usuarios:
+    build: ./ms-usuarios
+    container_name: gymcoach-ms-usuarios
+    environment:
+      PORT: ${USUARIOS_PORT}
+      JWT_SECRET: ${JWT_SECRET}
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: bd_usuarios
+      DB_USER: usuarios_app
+      DB_PASSWORD: ${USUARIOS_DB_PASSWORD}
+    ports:
+      - "${USUARIOS_PORT}:${USUARIOS_PORT}"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  ms-ejercicios:
+    build: ./ms-ejercicios
+    container_name: gymcoach-ms-ejercicios
+    environment:
+      PORT: ${EJERCICIOS_PORT}
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: bd_ejercicios
+      DB_USER: ejercicios_app
+      DB_PASSWORD: ${EJERCICIOS_DB_PASSWORD}
+      USUARIOS_URL: ${USUARIOS_URL}
+    ports:
+      - "${EJERCICIOS_PORT}:${EJERCICIOS_PORT}"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  ms-media:
+    build: ./ms-media
+    container_name: gymcoach-ms-media
+    environment:
+      PORT: ${MEDIA_PORT}
+      PUBLIC_GATEWAY_URL: ${PUBLIC_GATEWAY_URL}
+    ports:
+      - "${MEDIA_PORT}:${MEDIA_PORT}"
+    volumes:
+      - media_uploads:/app/uploads
+
+  ms-entrenamiento:
+    build: ./ms-entrenamiento
+    container_name: gymcoach-ms-entrenamiento
+    environment:
+      PORT: ${ENTRENAMIENTO_PORT}
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: bd_entrenamiento
+      DB_USER: entrenamiento_app
+      DB_PASSWORD: ${ENTRENAMIENTO_DB_PASSWORD}
+      USUARIOS_URL: ${USUARIOS_URL}
+      EJERCICIOS_URL: ${EJERCICIOS_URL}
+    ports:
+      - "${ENTRENAMIENTO_PORT}:${ENTRENAMIENTO_PORT}"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+  media_uploads:
