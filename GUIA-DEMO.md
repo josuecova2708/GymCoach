@@ -195,3 +195,7 @@ Esto es lo que sustenta que la arquitectura es correcta, punto por punto:
 microservicios?", la respuesta más contundente es la demo en vivo de los puntos 2 y 5 — el
 error de permisos en TablePlus y el apagar un contenedor sin que el sistema se caiga. Ninguna
 de esas dos cosas es posible en un monolito.
+
+-----------------
+posible error
+

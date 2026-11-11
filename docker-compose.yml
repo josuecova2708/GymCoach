@@ -103,4 +103,6 @@ services:
 
 volumes:
   postgres_data:
+    name: gymcoach_postgres_data
   media_uploads:
+    name: gymcoach_media_uploads
