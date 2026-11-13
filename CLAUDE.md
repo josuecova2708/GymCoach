@@ -199,13 +199,30 @@ GET    /rutinas/:id             rutina + detalle, con ejercicios hidratados
 PUT    /rutinas/:id
 DELETE /rutinas/:id             rechazar si está asignada
 GET    /asignaciones            lista (admite ?idAlumno=)
-POST   /asignaciones            validar fechaFin > fechaInicio
+POST   /asignaciones            cadena de validadores (400 / 404 / 409 / 503)
 DELETE /asignaciones/:id
 GET    /mi-rutina               ← CU6: rutina vigente del alumno autenticado
-GET    /reportes/alumnos-vigentes
-GET    /reportes/ejercicios-mas-usados
+GET    /reportes/:tipo          ?formato=json|csv|xlsx|pdf&idAlumno=&desde=&hasta=
 GET    /health
 ```
+
+`/reportes/:tipo` acepta `alumnos-vigentes`, `ejercicios-mas-usados` e
+`historial-asignaciones` (este exige `idAlumno`; `desde`/`hasta` opcionales). Sin `formato` se
+usa `json` (`{ titulo, columnas, filas }` para la tabla); `csv`, `xlsx` y `pdf` responden como
+descarga con `Content-Disposition`. Tipo o formato inexistente → 400; sin datos → 404.
+
+**Patrones de diseño (segundo parcial):**
+
+- **CU5, Chain of Responsibility.** `POST /asignaciones` pasa por una cadena de validadores en
+  `src/validadores/asignacion/`: `ValidadorCamposObligatorios` (400) → `ValidadorRangoFechas`
+  (400) → `ValidadorRutinaExiste` (404) → `ValidadorSolapamiento` (409) →
+  `ValidadorAlumnoExiste` (404, o 503 si MS-Usuarios no responde). `asignaciones.service` arma la
+  cadena una sola vez y es el cliente del patrón.
+- **CU7, Bridge + Template Method.** `src/reportes/` separa *qué reporte* (`Reporte` y sus 3
+  subclases) de *en qué formato* sale (`FormatoReporte` y sus 4 subclases en `formatos/`).
+  `Reporte.generar()` es el método plantilla: `validarFiltros` (hook) → `obtenerDatos` →
+  `enriquecer` → `renderizar`, donde se cruza el puente hacia el formato.
+  `reportes.service` elige la combinación tipo × formato.
 
 ### Rutas del Gateway (3000)
 ```
