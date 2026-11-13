@@ -95,6 +95,8 @@ services:
       DB_PASSWORD: ${ENTRENAMIENTO_DB_PASSWORD}
       USUARIOS_URL: ${USUARIOS_URL}
       EJERCICIOS_URL: ${EJERCICIOS_URL}
+      # Hora local de Bolivia para los reportes (fecha de generación del PDF, estado del historial)
+      TZ: America/La_Paz
     ports:
       - "${ENTRENAMIENTO_PORT}:${ENTRENAMIENTO_PORT}"
     depends_on:
