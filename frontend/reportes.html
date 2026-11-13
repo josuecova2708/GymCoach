@@ -33,35 +33,51 @@
   <div class="container">
     <h1 class="h3 mb-4">Reportes</h1>
 
-    <div class="row g-4">
-      <div class="col-lg-6">
-        <h2 class="h5">Alumnos con rutina vigente</h2>
-        <table class="table table-striped bg-white">
-          <thead>
-            <tr>
-              <th>Alumno</th>
-              <th>Rutina</th>
-              <th>Inicio</th>
-              <th>Fin</th>
-            </tr>
-          </thead>
-          <tbody id="tablaAlumnosVigentes"></tbody>
-        </table>
-      </div>
+    <div class="card mb-4">
+      <div class="card-body">
+        <div class="row g-3 align-items-end">
+          <div class="col-md-4">
+            <label for="tipoReporte" class="form-label">Tipo de reporte</label>
+            <select class="form-select" id="tipoReporte">
+              <option value="alumnos-vigentes">Alumnos con rutina vigente</option>
+              <option value="ejercicios-mas-usados">Ejercicios más usados</option>
+              <option value="historial-asignaciones">Historial de asignaciones de un alumno</option>
+            </select>
+          </div>
+        </div>
 
-      <div class="col-lg-6">
-        <h2 class="h5">Ejercicios más usados</h2>
-        <table class="table table-striped bg-white">
-          <thead>
-            <tr>
-              <th>Ejercicio</th>
-              <th>Veces usado</th>
-            </tr>
-          </thead>
-          <tbody id="tablaEjerciciosMasUsados"></tbody>
-        </table>
+        <!-- Solo visible para el historial (onCambiarTipo) -->
+        <div class="row g-3 mt-1 d-none" id="filtrosHistorial">
+          <div class="col-md-4">
+            <label for="filtroAlumno" class="form-label">Alumno</label>
+            <select class="form-select" id="filtroAlumno"></select>
+          </div>
+          <div class="col-md-3">
+            <label for="filtroDesde" class="form-label">Desde</label>
+            <input type="date" class="form-control" id="filtroDesde">
+          </div>
+          <div class="col-md-3">
+            <label for="filtroHasta" class="form-label">Hasta</label>
+            <input type="date" class="form-control" id="filtroHasta">
+          </div>
+        </div>
+
+        <div class="mt-3 d-flex flex-wrap gap-2">
+          <button type="button" class="btn btn-primary" id="btnVerPantalla">Ver en pantalla</button>
+          <button type="button" class="btn btn-outline-secondary" data-formato="csv">CSV</button>
+          <button type="button" class="btn btn-outline-success" data-formato="xlsx">Excel</button>
+          <button type="button" class="btn btn-outline-danger" data-formato="pdf">PDF</button>
+        </div>
+
+        <div id="alertaReporte" class="alert mt-3 mb-0 d-none" role="alert"></div>
       </div>
     </div>
+
+    <h2 class="h5" id="tituloReporte"></h2>
+    <table class="table table-striped bg-white d-none" id="tablaReporte">
+      <thead id="encabezadoReporte"></thead>
+      <tbody id="cuerpoReporte"></tbody>
+    </table>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

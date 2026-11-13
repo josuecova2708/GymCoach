@@ -4,7 +4,6 @@ const asyncHandler = require('../utils/asyncHandler');
 
 const router = Router();
 
-router.get('/alumnos-vigentes', asyncHandler(reportesController.alumnosVigentes));
-router.get('/ejercicios-mas-usados', asyncHandler(reportesController.ejerciciosMasUsados));
+router.get('/:tipo', asyncHandler(reportesController.generar));
 
 module.exports = router;

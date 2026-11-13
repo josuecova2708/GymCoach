@@ -11,7 +11,9 @@ const EJERCICIOS_URL = process.env.EJERCICIOS_URL;
 const MEDIA_URL = process.env.MEDIA_URL;
 const ENTRENAMIENTO_URL = process.env.ENTRENAMIENTO_URL;
 
-app.use(cors());
+// Content-Disposition se expone para que el frontend pueda leer el nombre del
+// archivo en las descargas de /api/reportes (CU7); por defecto CORS lo oculta.
+app.use(cors({ exposedHeaders: ['Content-Disposition'] }));
 
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', service: 'gateway' });

@@ -73,3 +73,45 @@ async function apiFetch(path, options = {}) {
 
   return cuerpo;
 }
+
+// CU7: descarga un archivo binario (CSV, Excel, PDF) a través del gateway.
+// Errores: lanza Error con .status y el mensaje del JSON { error }, igual que apiFetch.
+async function apiDescargar(path) {
+  const headers = {};
+  const token = getToken();
+  if (token) headers['Authorization'] = `Bearer ${token}`;
+
+  const respuesta = await fetch(`${API_BASE_URL}${path}`, { headers });
+
+  if (respuesta.status === 401 && token) {
+    cerrarSesion();
+    throw new Error('sesión expirada');
+  }
+
+  if (!respuesta.ok) {
+    let mensaje = `error ${respuesta.status}`;
+    try {
+      const cuerpo = await respuesta.json();
+      if (cuerpo && cuerpo.error) mensaje = cuerpo.error;
+    } catch (e) {
+      // la respuesta de error no era JSON; queda el mensaje genérico
+    }
+    const error = new Error(mensaje);
+    error.status = respuesta.status;
+    throw error;
+  }
+
+  const blob = await respuesta.blob();
+  const disposition = respuesta.headers.get('content-disposition') || '';
+  const coincidencia = /filename="?([^";]+)"?/i.exec(disposition);
+  const nombreArchivo = coincidencia ? coincidencia[1] : 'reporte';
+
+  const url = URL.createObjectURL(blob);
+  const enlace = document.createElement('a');
+  enlace.href = url;
+  enlace.download = nombreArchivo;
+  document.body.appendChild(enlace);
+  enlace.click();
+  enlace.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
