@@ -42,4 +42,17 @@ async function obtenerVigentePorAlumno(idAlumno) {
   return rows[0] || null;
 }
 
-module.exports = { listar, crear, eliminar, obtenerVigentePorAlumno };
+// CU5: asignaciones del alumno cuyo rango se cruza con [fechaInicio, fechaFin].
+// Dos rangos cerrados se cruzan si cada uno empieza antes (o el mismo día) de que termine el otro.
+async function buscarSolapadas(idAlumno, fechaInicio, fechaFin) {
+  const { rows } = await pool.query(
+    `SELECT "idAsignacion", "idAlumno", "idRutina", "fechaInicio", "fechaFin"
+     FROM "Asignacion"
+     WHERE "idAlumno" = $1 AND "fechaInicio" <= $3 AND "fechaFin" >= $2
+     ORDER BY "fechaInicio"`,
+    [idAlumno, fechaInicio, fechaFin]
+  );
+  return rows;
+}
+
+module.exports = { listar, crear, eliminar, obtenerVigentePorAlumno, buscarSolapadas };

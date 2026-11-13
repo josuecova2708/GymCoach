@@ -68,6 +68,10 @@ formAsignacion.addEventListener('submit', async (evento) => {
     formAsignacion.reset();
     await cargarAsignaciones();
   } catch (err) {
+    // 409 = solapamiento: el CU5 lo trata como advertencia (amarilla); el resto es error (roja).
+    const esAdvertencia = err.status === 409;
+    errorEl.classList.toggle('alert-warning', esAdvertencia);
+    errorEl.classList.toggle('alert-danger', !esAdvertencia);
     errorEl.textContent = err.message;
     errorEl.classList.remove('d-none');
   }

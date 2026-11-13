@@ -1,5 +1,6 @@
 const asignacionesService = require('../services/asignaciones.service');
 const parseId = require('../utils/parseId');
+const ErrorValidacion = require('../errores/ErrorValidacion');
 
 async function listar(req, res) {
   let idAlumno;
@@ -10,30 +11,14 @@ async function listar(req, res) {
   res.json(await asignacionesService.listar({ idAlumno }));
 }
 
+// CU5: las validaciones viven en la cadena de validadores (asignaciones.service).
 async function crear(req, res) {
-  const { idAlumno, idRutina, fechaInicio, fechaFin } = req.body || {};
-  const idAlumnoNum = parseId(idAlumno);
-  const idRutinaNum = parseId(idRutina);
-
-  if (idAlumnoNum === null || idRutinaNum === null || !fechaInicio || !fechaFin) {
-    return res.status(400).json({ error: 'idAlumno, idRutina, fechaInicio y fechaFin son obligatorios' });
-  }
-
-  if (new Date(fechaFin) <= new Date(fechaInicio)) {
-    return res.status(400).json({ error: 'fechaFin debe ser posterior a fechaInicio' });
-  }
-
   try {
-    const asignacion = await asignacionesService.crear({
-      idAlumno: idAlumnoNum,
-      idRutina: idRutinaNum,
-      fechaInicio,
-      fechaFin,
-    });
+    const asignacion = await asignacionesService.crear(req.body || {});
     res.status(201).json(asignacion);
   } catch (err) {
-    if (err.code === '23503') {
-      return res.status(400).json({ error: 'la rutina indicada no existe' });
+    if (err instanceof ErrorValidacion) {
+      return res.status(err.status).json({ error: err.message });
     }
     throw err;
   }
